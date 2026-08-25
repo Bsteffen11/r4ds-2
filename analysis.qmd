@@ -148,3 +148,69 @@ ggplot(calendar_resid, aes(x = calendar_date, y = mean_pct_resid)) +
     y = "Mean residual (% of overall mean births)"
   )
 ```
+
+```{r}
+recruits <- read_excel("data/nba_recruits.xlsx")
+glimpse(recruits)
+```
+
+```{r}
+summary(recruits |> select(
+  rank,
+  nba_mean_ws48,
+  top_mean_wa,
+  total_seasons,
+  drafted
+))
+```
+
+```{r}
+recruits |> count(tier)
+```
+
+```{r}
+#| cache: true
+basketball_tibble <- recruits |>
+  mutate(tier = factor(
+    tier,
+    levels = c(
+      "Never played",
+      "Brief career",
+      "Solid career",
+      "All-Star level",
+      "Superstar"
+    ),
+    ordered = TRUE
+  ), recruit_group = factor(
+    recruit_group,
+    levels = c(
+      "#1–10",
+      "#11–25",
+      "#26–50",
+      "#51–100",
+      "Outside top 100"
+    ),
+    ordered = TRUE
+  ))
+```
+
+```{r}
+basketball_tibble |>
+  filter(!is.na(rank), !is.na(top_mean_wa)) |>
+  ggplot(aes(x = rank, y = top_mean_wa, color = tier)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  geom_text(
+    data = basketball_tibble |>
+      filter(!is.na(rank), !is.na(top_mean_wa)) |>
+      slice_max(top_mean_wa, n = 4, with_ties = FALSE),
+    aes(label = name),
+    vjust = -0.8,
+    show.legend = FALSE
+  ) +
+  labs(
+    x = "Recruit rank",
+    y = "Peak Wins Added",
+    color = "Career tier"
+  )
+```
