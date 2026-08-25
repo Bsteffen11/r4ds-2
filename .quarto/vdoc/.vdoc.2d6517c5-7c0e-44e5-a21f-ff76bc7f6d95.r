@@ -1,17 +1,17 @@
----
-title: "Analyzing US Births and Basketball Recruits"
-author: "Brady Steffen"
-execute:
-  echo: false
----
-
-```{r}
+#
+#
+#
+#
+#
+#
+#
+#
 #| message: false
 library(tidyverse)
 library(readxl)
-```
-
-```{r}
+#
+#
+#
 #| cache: true
 births_tibble <- read_excel("data/us_births_1994_2014.xlsx") |>
   mutate(
@@ -21,9 +21,9 @@ births_tibble <- read_excel("data/us_births_1994_2014.xlsx") |>
       ordered = TRUE
     )
   )
-```
-
-```{r}
+#
+#
+#
 births_model <- lm(births ~ factor(year) + factor(month) + day_of_week,
                    data = births_tibble)
 
@@ -52,9 +52,9 @@ calendar_resid |>
     caption = "Source: FiveThirtyEight/SSA (1994–2014)"
   ) +
   theme_minimal()
-```
-
-```{r}
+#
+#
+#
 #| cache: true
 basketball_tibble <- read_excel("data/nba_recruits.xlsx") |>
   mutate(
@@ -68,9 +68,9 @@ basketball_tibble <- read_excel("data/nba_recruits.xlsx") |>
       levels = c("#1–10", "#11–25", "#26–50", "#51–100", "Outside top 100")
     )
   )
-```
-
-```{r}
+#
+#
+#
 basketball_tibble |>
   filter(!is.na(rank), !is.na(top_mean_wa)) |>
   ggplot(aes(x = rank, y = top_mean_wa, color = tier)) +
@@ -106,29 +106,29 @@ basketball_tibble |>
   ) +
   theme_minimal()
 ```
----
-title: "Analyzing US Births and Basketball Recruits"
-author: "Brady Steffen"
-execute:
-  echo: false
----
-
-```{r}
+#
+#
+#
+#
+#
+#
+#
+#
 #| message: false
 library(tidyverse)
 library(readxl)
-```
-
-```{r}
+#
+#
+#
 births <- read_excel("data/us_births_1994_2014.xlsx")
 glimpse(births)
-```
-
-```{r}
+#
+#
+#
 summary(births |> select(births, year))
-```
-
-```{r}
+#
+#
+#
 #| cache: true
 births_tibble <- births |>
   mutate(day_of_week = factor(
@@ -136,9 +136,9 @@ births_tibble <- births |>
     levels = c("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"),
     ordered = TRUE
   ))
-```
-
-```{r}
+#
+#
+#
 average_births <- births_tibble |>
   group_by(month, date_of_month) |>
   summarise(
@@ -147,9 +147,9 @@ average_births <- births_tibble |>
   )
 
 average_births
-```
-
-```{r}
+#
+#
+#
 average_births |>
   mutate(month = factor(month, levels = 1:12, labels = month.name)) |>
   ggplot(aes(x = date_of_month, y = month, fill = average_births)) +
@@ -160,9 +160,9 @@ average_births |>
     x = "Day of month",
     y = "Month"
   )
-```
-
-```{r}
+#
+#
+#
 christmas_births <- births_tibble |>
   filter(month == 12, date_of_month == 25) |>
   select(year, christmas_births = births, day_of_week)
@@ -178,13 +178,13 @@ surrounding_births <- births_tibble |>
 christmas_data <- christmas_births |>
   left_join(surrounding_births, by = "year") |>
   mutate(pct_of_baseline = 100 * christmas_births / baseline_births)
-```
-
-```{r}
+#
+#
+#
 summary(christmas_data)
-```
-
-```{r}
+#
+#
+#
 ggplot(christmas_data, aes(x = year, y = pct_of_baseline)) +
   geom_line() +
   geom_point(aes(color = day_of_week)) +
@@ -192,25 +192,25 @@ ggplot(christmas_data, aes(x = year, y = pct_of_baseline)) +
     x = "Year",
     y = "December 25 births (% of baseline)"
   )
-```
-
-```{r}
+#
+#
+#
 births_model <- lm(
   births ~ year + month + day_of_week,
   data = births_tibble
 )
 
 summary(births_model)$r.squared
-```
-
-```{r}
+#
+#
+#
 births_adjusted <- births_tibble |>
   mutate(pct_resid = 100 * resid(births_model) / mean(births))
 
 str(births_adjusted)
-```
-
-```{r}
+#
+#
+#
 calendar_resid <- births_adjusted |>
   filter(!(month == 2 & date_of_month == 29)) |>
   group_by(month, date_of_month) |>
@@ -226,9 +226,9 @@ calendar_resid <- births_adjusted |>
   arrange(calendar_date)
 
 calendar_resid
-```
-
-```{r}
+#
+#
+#
 holiday_dips <- calendar_resid |>
   filter(calendar_date %in% as.Date(c(
     "2001-01-01",
@@ -255,14 +255,14 @@ ggplot(calendar_resid, aes(x = calendar_date, y = mean_pct_resid)) +
     x = "Calendar date",
     y = "Mean residual (% of overall mean births)"
   )
-```
-
-```{r}
+#
+#
+#
 recruits <- read_excel("data/nba_recruits.xlsx")
 glimpse(recruits)
-```
-
-```{r}
+#
+#
+#
 summary(recruits |> select(
   rank,
   nba_mean_ws48,
@@ -270,13 +270,13 @@ summary(recruits |> select(
   total_seasons,
   drafted
 ))
-```
-
-```{r}
+#
+#
+#
 recruits |> count(tier)
-```
-
-```{r}
+#
+#
+#
 #| cache: true
 basketball_tibble <- recruits |>
   mutate(tier = factor(
@@ -300,9 +300,9 @@ basketball_tibble <- recruits |>
     ),
     ordered = TRUE
   ))
-```
-
-```{r}
+#
+#
+#
 basketball_tibble |>
   filter(!is.na(rank), !is.na(top_mean_wa)) |>
   ggplot(aes(x = rank, y = top_mean_wa, color = tier)) +
@@ -321,4 +321,7 @@ basketball_tibble |>
     y = "Peak Wins Added",
     color = "Career tier"
   )
-```
+#
+#
+#
+#
